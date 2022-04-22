@@ -60,14 +60,14 @@ class runPaceZones:
 class hrBikeZones:
     def __init__(self, avgBikeHR, hrBounds):
         import pandas as pd
-        self.ftRunHR = 0.95 * avgBikeHR
-        self.z1 = [hrBounds[0], round(0.81 * self.ftRunHR, 0)]
-        self.z2 = [round(0.81 * self.ftRunHR, 0), round(0.90 * self.ftRunHR, 0)]
-        self.z3 = [round(0.90 * self.ftRunHR, 0), round(0.94 * self.ftRunHR, 0)]
-        self.z4 = [round(0.94 * self.ftRunHR, 0), round(1.0 * self.ftRunHR, 0)]
-        self.z5a = [round(1.0 * self.ftRunHR, 0), round(1.03 * self.ftRunHR, 0)]
-        self.z5b = [round(1.03 * self.ftRunHR, 0), round(1.06 * self.ftRunHR, 0)]
-        self.z5c = [round(1.06 * self.ftRunHR, 0), hrBounds[1]]
+        self.ftBikeHR = 0.95 * avgBikeHR
+        self.z1 = [hrBounds[0], round(0.81 * self.ftBikeHR, 0)]
+        self.z2 = [round(0.81 * self.ftBikeHR, 0), round(0.90 * self.ftBikeHR, 0)]
+        self.z3 = [round(0.90 * self.ftBikeHR, 0), round(0.94 * self.ftBikeHR, 0)]
+        self.z4 = [round(0.94 * self.ftBikeHR, 0), round(1.0 * self.ftBikeHR, 0)]
+        self.z5a = [round(1.0 * self.ftBikeHR, 0), round(1.03 * self.ftBikeHR, 0)]
+        self.z5b = [round(1.03 * self.ftBikeHR, 0), round(1.06 * self.ftBikeHR, 0)]
+        self.z5c = [round(1.06 * self.ftBikeHR, 0), hrBounds[1]]
         self.list = [self.z1, self.z2, self.z3, self.z4, self.z5a, self.z5b, self.z5c]
         self.df = pd.DataFrame(
             self.list,
@@ -93,13 +93,14 @@ class powerBikeZones:
         )
 
 class swimPaceZones:
-    def __init__(self, avgSwimPace):
+    def __init__(self, swimTestResult):
         import pandas as pd
         import datetime as datetime
 
-        avgSwimPace = datetime.timedelta(minutes=datetime.datetime.strptime(avgSwimPace, '%M:%S').minute,
-                                            seconds=datetime.datetime.strptime(avgSwimPace,
+        testResult = datetime.timedelta(minutes=datetime.datetime.strptime(swimTestResult, '%M:%S').minute,
+                                            seconds=datetime.datetime.strptime(swimTestResult,
                                                                                '%M:%S').second).total_seconds()
+        self.ftSwimPace = 1.05 * testResult / 10
 
         class RangeDict(dict):
             def __getitem__(self, item):
@@ -127,13 +128,13 @@ class swimPaceZones:
              range(1348,1403): [[180, 168], [168, 158], [158, 147], [147, 139], [139, 134], [134, 124], [124, 30]]}
             )
 
-        self.list = [self.paceLookup[avgSwimPace][0],
-                     self.paceLookup[avgSwimPace][1],
-                     self.paceLookup[avgSwimPace][2],
-                     self.paceLookup[avgSwimPace][3],
-                     self.paceLookup[avgSwimPace][4],
-                     self.paceLookup[avgSwimPace][5],
-                     self.paceLookup[avgSwimPace][6]
+        self.list = [self.paceLookup[testResult][0],
+                     self.paceLookup[testResult][1],
+                     self.paceLookup[testResult][2],
+                     self.paceLookup[testResult][3],
+                     self.paceLookup[testResult][4],
+                     self.paceLookup[testResult][5],
+                     self.paceLookup[testResult][6]
                      ]
         self.df = pd.DataFrame(
             self.list,

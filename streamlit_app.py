@@ -47,7 +47,9 @@ if discipline == 'Run':
             0, 220, (50, 190))
         runTestAvgHR = st.sidebar.number_input('Input test average heart rate [BPM]', min_value=100, max_value=220,
                                                value=175, step=1)
-        st.write(hrRunZones(runTestAvgHR, hrBounds).df.style.format("{:.0f}"))
+        st.text('Your running Functional Threshold Heart Rate (rFTHR) is '
+                + str(round(hrRunZones(runTestAvgHR, hrBounds).ftRunHR)) + ' BPM')
+        st.dataframe(hrRunZones(runTestAvgHR, hrBounds).df.style.format("{:.0f}"))
     if 'Pace' in testResults:
         runTestAvgPace = st.sidebar.text_input('Input test average pace [mm:ss]', value='5:00')
         results_in_seconds = runPaceZones(runTestAvgPace).list
@@ -74,7 +76,10 @@ if discipline == 'Run':
             index=['1', '2', '3', '4', '5a', '5b', '5c']
         )
 
-        results_in_minutes
+        st.text('Your running Functional Threshold Pace (rFTPa) is '
+                + str(datetime.timedelta(seconds=round(runPaceZones(runTestAvgPace).ftRunPace))) + ' min/km')
+
+        st.dataframe(results_in_minutes)
 
 if discipline == 'Bike':
     if 'Heart Rate' in testResults:
@@ -83,15 +88,19 @@ if discipline == 'Bike':
             0, 220, (50, 190))
         bikeTestAvgHR = st.sidebar.number_input('Input test average heart rate [BPM]', min_value=100, max_value=220,
                                                value=175, step=1)
-        st.write(hrBikeZones(bikeTestAvgHR, hrBounds).df.style.format("{:.0f}"))
+        st.write('Your cycling Functional Threshold Heart Rate (cFTHR) is '
+                 + str(round(hrBikeZones(bikeTestAvgHR, hrBounds).ftBikeHR)) + ' BPM')
+        st.dataframe(hrBikeZones(bikeTestAvgHR, hrBounds).df.style.format("{:.0f}"))
     if 'Power' in testResults:
         bikeTestAvgPower = st.sidebar.number_input('Input test average power [W]', min_value=50, max_value=2500,
                                                    value=200, step=1)
-        st.write(powerBikeZones(bikeTestAvgPower).df.style.format("{:.0f}"))
+        st.write('Your cycling Functional Threshold Power (cFTPo) is '
+                 + str(round(powerBikeZones(bikeTestAvgPower).ftBikePower)) + ' W')
+        st.dataframe(powerBikeZones(bikeTestAvgPower).df.style.format("{:.0f}"))
 
 if discipline == 'Swim':
-    swimTestAvgPace = st.sidebar.text_input('Input test result for 1000 m [mm:ss]', value='20:00')
-    swim_results_in_seconds = swimPaceZones(swimTestAvgPace).list
+    swimTestResult = st.sidebar.text_input('Input test result for 1000 m [mm:ss]', value='20:00')
+    swim_results_in_seconds = swimPaceZones(swimTestResult).list
 
     swim_results_in_minutes_list = [[str(datetime.timedelta(seconds=swim_results_in_seconds[0][0])),
                                 str(datetime.timedelta(seconds=swim_results_in_seconds[0][1]))],
@@ -115,4 +124,7 @@ if discipline == 'Swim':
         index=['1', '2', '3', '4', '5a', '5b', '5c']
     )
 
-    swim_results_in_minutes
+    st.write('Your swimming Functional Threshold Pace (sFTPa) is '
+             + str(datetime.timedelta(seconds=round(swimPaceZones(swimTestResult).ftSwimPace))) + ' min/100m')
+
+    st.dataframe(swim_results_in_minutes)
